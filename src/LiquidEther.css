@@ -1,0 +1,17 @@
+.liquid-ether-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0d0016, #1a0533, #3a0a7a, #5227FF, #7a05ff, #2a0050);
+  background-size: 400% 400%;
+  animation: liquidMove 10s ease infinite;
+  pointer-events: none;
+}
+
+@keyframes liquidMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
