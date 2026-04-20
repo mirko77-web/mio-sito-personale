@@ -533,43 +533,26 @@ body.menu-open {
   }
 }
 
-/* =========================
-   MOBILE FIX (NON INVASIVO)
-========================= */
+/* ===== SOLO LA PARTE IMPORTANTE ===== */
+
+/* MOBILE FIX UNICO (PULITO) */
 @media (max-width: 650px) {
 
-  /* HERO più naturale */
   .hero {
     flex-direction: column;
-    align-items: flex-start;
     padding: 1.2rem;
     min-height: auto;
   }
 
-  /* evita che il testo venga coperto dalla foto */
   .hero-text {
-    margin-top: 38vh;
+    margin-top: 35vh;
     max-width: 100%;
   }
 
-  /* immagine sistemata */
-  .bg-image-right {
-    position: absolute;
-    width: 100%;
-    height: 40vh;
-    right: 0;
-    top: 0;
-    opacity: 0.45;
-    filter: blur(5px) brightness(0.7);
-  }
-
-  /* titolo più piccolo */
   .focus-word {
     font-size: clamp(2.3rem, 10vw, 3.2rem) !important;
-    letter-spacing: -1px;
   }
 
-  /* navbar più ordinata */
   .navbar {
     flex-wrap: wrap;
     gap: 8px;
@@ -580,59 +563,41 @@ body.menu-open {
     justify-content: space-between;
   }
 
-  /* skills leggibili */
+  .cta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .skill-tag {
     font-size: 12px;
     padding: 4px 10px;
   }
 
-  /* CTA in colonna */
-  .cta-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  /* card stats più compatta */
   .wow-card-inner {
     grid-template-columns: 1fr;
   }
 
-  /* progetti meno schiacciati */
-  .projects-section.open {
-    max-height: 500px;
-  }
-
-}
-
-/* =========================
-   MOBILE FIX FOTO (FORZATO)
-========================= */
-@media (max-width: 650px) {
-
+  /* ⭐ FOTO PERFETTA MOBILE */
   .bg-image-right {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
 
-    width: 120vw !important;
-    height: 100vh !important;
+    width: 120vw;
+    height: 100vh;
 
-    transform: translate(-50%, -50%) !important;
+    transform: translate(-50%, -50%);
 
-    background-position: center center !important;
-    background-size: cover !important;
+    background: url('/profilo.jpeg') center center / cover no-repeat;
 
-    opacity: 0.8 !important;
-    filter: blur(3px) brightness(0.9) !important;
+    opacity: 0.8;
+    filter: blur(3px) brightness(0.9);
 
-    z-index: 1 !important;
+    z-index: 1;
   }
 
-  /* testo sopra la foto */
   .content-layer {
     position: relative;
     z-index: 5;
   }
-
 }
