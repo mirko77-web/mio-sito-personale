@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import LiquidEther from './LiquidEther';
 import FlowingMenu from './FlowingMenu';
 import './App.css';
 
-// ── TRUEFOCUS ─────────────────────────────────────────────
 interface TrueFocusProps {
   sentence?: string;
   manualMode?: boolean;
@@ -34,16 +33,19 @@ function TrueFocus({
   useEffect(() => {
     if (!manualMode) {
       const interval = setInterval(() => {
-        setCurrentIndex(prev => (prev + 1) % words.length);
+        setCurrentIndex((prev) => (prev + 1) % words.length);
       }, (animationDuration + pauseBetweenAnimations) * 1000);
+
       return () => clearInterval(interval);
     }
   }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);
 
   useEffect(() => {
     if (!wordRefs.current[currentIndex] || !containerRef.current) return;
+
     const parentRect = containerRef.current.getBoundingClientRect();
     const activeRect = wordRefs.current[currentIndex]!.getBoundingClientRect();
+
     setFocusRect({
       x: activeRect.left - parentRect.left,
       y: activeRect.top - parentRect.top,
@@ -59,7 +61,9 @@ function TrueFocus({
         return (
           <span
             key={index}
-            ref={el => { wordRefs.current[index] = el; }}
+            ref={(el) => {
+              wordRefs.current[index] = el;
+            }}
             className="focus-word"
             style={{
               filter: isActive ? 'blur(0px)' : `blur(${blurAmount}px)`,
@@ -67,18 +71,35 @@ function TrueFocus({
               ['--border-color' as string]: borderColor,
               ['--glow-color' as string]: glowColor,
             }}
-            onMouseEnter={() => { if (manualMode) { setLastActiveIndex(index); setCurrentIndex(index); } }}
-            onMouseLeave={() => { if (manualMode && lastActiveIndex !== null) setCurrentIndex(lastActiveIndex); }}
+            onMouseEnter={() => {
+              if (manualMode) {
+                setLastActiveIndex(index);
+                setCurrentIndex(index);
+              }
+            }}
+            onMouseLeave={() => {
+              if (manualMode && lastActiveIndex !== null) setCurrentIndex(lastActiveIndex);
+            }}
           >
             {word}
           </span>
         );
       })}
+
       <motion.div
         className="focus-frame"
-        animate={{ x: focusRect.x, y: focusRect.y, width: focusRect.width, height: focusRect.height, opacity: 1 }}
+        animate={{
+          x: focusRect.x,
+          y: focusRect.y,
+          width: focusRect.width,
+          height: focusRect.height,
+          opacity: 1,
+        }}
         transition={{ duration: animationDuration }}
-        style={{ ['--border-color' as string]: borderColor, ['--glow-color' as string]: glowColor }}
+        style={{
+          ['--border-color' as string]: borderColor,
+          ['--glow-color' as string]: glowColor,
+        }}
       >
         <span className="corner top-left" />
         <span className="corner top-right" />
@@ -89,46 +110,67 @@ function TrueFocus({
   );
 }
 
-// ── PROJECTS ──────────────────────────────────────────────
 const menuItems = [
-  { link: 'https://la-perla-avetrana.vercel.app/', text: 'Progetto 1', image: 'https://picsum.photos/seed/p1/400/200' },
-  { link: 'https://gradi-3-3.vercel.app/', text: 'Progetto 2', image: 'https://picsum.photos/seed/p2/400/200' },
-  { link: 'https://gestionale-agricampeggio-monaci.vercel.app/', text: 'Progetto 3', image: 'https://picsum.photos/seed/p3/400/200' },
-  { link: 'https://torneo-sotto-orologio.vercel.app/', text: 'Progetto 4', image: 'https://picsum.photos/seed/p4/400/200' },
-  { link: 'https://svapo-house-web.vercel.app/', text: 'Progetto 5', image: 'https://picsum.photos/seed/p5/400/200' },
+  { link: 'https://torneo-sotto-orologio.vercel.app/', text: 'Progetto 1', image: 'https://picsum.photos/seed/p1/400/200' },
+  { link: 'https://svapo-house-web.vercel.app/', text: 'Progetto 2', image: 'https://picsum.photos/seed/p2/400/200' },
+  { link: 'https://la-perla-avetrana.vercel.app/', text: 'Progetto 3', image: 'https://picsum.photos/seed/p3/400/200' },
+  { link: 'https://gradi-3-3.vercel.app/', text: 'Progetto 4', image: 'https://picsum.photos/seed/p4/400/200' },
 ];
 
-// ── APP ───────────────────────────────────────────────────
 export default function App() {
   const [projOpen, setProjOpen] = useState(false);
 
   return (
     <div className="page">
-      {/* SFONDO ANIMATO */}
       <div className="bg-layer">
         <LiquidEther />
       </div>
 
+      <div className="bg-image-right" />
+
       <div className="content-layer">
-        {/* NAVBAR */}
         <nav className="navbar">
           <div className="logo">MIRKO.</div>
           <div className="nav-links">
-            <a className="nav-link" href="mailto:mirkoprisciano@gmail.com"> <img src="/phone-call.png" alt=""width={40} height={40} /></a>
-            <a className="nav-link nav-ig" href="https://instagram.com/mirkopriscia" target="_blank" rel="noreferrer">
-              <span  /> <img src="/instagram-circle.png" alt="" width={40} height={40}  /></a>
+            <button className="nav-link" onClick={() => setProjOpen((o) => !o)}>
+              Progetti {projOpen ? '▴' : '▾'}
+            </button>
+
+            <a
+              className="nav-link nav-gh"
+              href="https://github.com/mirko77-web"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span className="gh-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </span>
+              GitHub
+            </a>
+
+            <a
+              className="nav-link nav-ig"
+              href="https://www.instagram.com/mirko_priscia?igsh=MWF0cW9jOTYyb3JtYw=="
+              target="_blank"
+              rel="noreferrer"
+            >
+           
+              <img src="public/insta logo.png" width={20} height={20} alt="Instagram" />Instagram
+            </a>
+
+            <a className="nav-link" href="mailto:mirkoprisciano@gmail.com">
+              <span className="gmail-icon">✉</span>
+              Gmail
+            </a>
           </div>
         </nav>
 
-        {/* HERO */}
-        <main className="hero">
-          <p className="welcome-text">Benvenuto nel mio mondo</p>
+        <div className="hero">
+          <div className="hero-text">
+            <p className="welcome-text">benvenuti nella mia pagina</p>
 
-          {/* <div className="photo-wrap">
-            <div className="photo-placeholder"><img src="" alt="" /></div>
-          </div> */}
-
-          <div className="title-wrap big-title">
             <TrueFocus
               sentence="I am Mirko"
               manualMode={false}
@@ -138,35 +180,70 @@ export default function App() {
               animationDuration={0.5}
               pauseBetweenAnimations={1}
             />
+
+            <p className="subtitle">
+              Creative & Coder · Design,
+              <br />
+              sviluppo web e contenuti visivi
+            </p>
+
+            <div className="skills-row">
+              {['React', 'TypeScript', 'Tailwind', 'Html', 'JavaScript', 'Vite', 'Figma', 'Video', 'Social'].map(
+                (s) => (
+                  <span key={s} className="skill-tag">
+                    {s}
+                  </span>
+                )
+              )}
+            </div>
+
+            <div className="cta-row">
+              <button className="btn-d" onClick={() => setProjOpen((o) => !o)}>
+                <span>I miei progetti</span>
+                <span className="btn-arrow">→</span>
+              </button>
+
+              <div className="btn-divider" />
+
+              <a className="btn-d2" href="mailto:tua@gmail.com">
+                <span>Parliamo del tuo progetto</span>
+                <span className="btn-arrow2">↗</span>
+              </a>
+            </div>
+
+            <div className="wow-card">
+              <div className="wow-card-glow" />
+              <div className="wow-card-inner">
+                <div className="wow-stat">
+                  <span className="wow-num">10+</span>
+                  <span className="wow-label">Progetti creati</span>
+                </div>
+                <div className="wow-stat">
+                  <span className="wow-num">2+</span>
+                  <span className="wow-label">Anni di pratica</span>
+                </div>
+                <div className="wow-stat">
+                  <span className="wow-num">100%</span>
+                  <span className="wow-label">Responsive</span>
+                </div>
+              </div>
+              <p className="wow-text">
+                Web design, frontend e contenuti visivi con un approccio pulito, moderno e focalizzato sulla conversione.
+              </p>
+            </div>
+
+            <div className={`projects-section ${projOpen ? 'open' : ''}`}>
+              <FlowingMenu
+                items={menuItems}
+                speed={18}
+                textColor="#fff"
+                bgColor="#050505"
+                marqueeBgColor="#3ecf8e"
+                marqueeTextColor="#000"
+                borderColor="#1a1a1a"
+              />
+            </div>
           </div>
-
-          <p className="subtitle">Creative & Coder · Design, sviluppo web e contenuti visivi</p>
-
-          <div className="skills-row">
-            {['React', 'TypeScript', 'Tailwind', 'Vite', 'Figma', 'Video', 'Social'].map(s => (
-              <span key={s} className="skill-tag">{s}</span>
-            ))}
-          </div>
-
-          <div className="cta-row">
-            <button className="btn-primary" onClick={() => setProjOpen(o => !o)}>
-              I miei progetti
-            </button>
-            <a className="btn-secondary" href="mailto:mirkoprisciano@gmail.com">Preventivo ↗</a>
-          </div>
-        </main>
-
-        {/* SEZIONE PROGETTI CON FLOWINGMENU */}
-        <div className={`projects-section ${projOpen ? 'open' : ''}`}>
-          <FlowingMenu
-            items={menuItems}
-            speed={18}
-            textColor="#fff"
-            bgColor="#0a0a0a"
-            marqueeBgColor="#3ecf8e"
-            marqueeTextColor="#000"
-            borderColor="#1e1e1e"
-          />
         </div>
       </div>
     </div>
