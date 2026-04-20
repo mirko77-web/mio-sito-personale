@@ -1,232 +1,606 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
-import LiquidEther from './LiquidEther';
-import FlowingMenu from './FlowingMenu';
-import './App.css';
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap');
 
-interface TrueFocusProps {
-  sentence?: string;
-  manualMode?: boolean;
-  blurAmount?: number;
-  borderColor?: string;
-  glowColor?: string;
-  animationDuration?: number;
-  pauseBetweenAnimations?: number;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-function TrueFocus({
-  sentence = 'True Focus',
-  manualMode = false,
-  blurAmount = 5,
-  borderColor = '#3ecf8e',
-  glowColor = 'rgba(62,207,142,0.6)',
-  animationDuration = 0.5,
-  pauseBetweenAnimations = 1,
-}: TrueFocusProps) {
-  const words = sentence.split(' ');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [lastActiveIndex, setLastActiveIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 });
-
-  useEffect(() => {
-    if (!manualMode) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % words.length);
-      }, (animationDuration + pauseBetweenAnimations) * 1000);
-      return () => clearInterval(interval);
-    }
-  }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);
-
-  useEffect(() => {
-    if (!wordRefs.current[currentIndex] || !containerRef.current) return;
-    const parentRect = containerRef.current.getBoundingClientRect();
-    const activeRect = wordRefs.current[currentIndex]!.getBoundingClientRect();
-    setFocusRect({
-      x: activeRect.left - parentRect.left,
-      y: activeRect.top - parentRect.top,
-      width: activeRect.width,
-      height: activeRect.height,
-    });
-  }, [currentIndex, words.length]);
-
-  return (
-    <div className="focus-container" ref={containerRef}>
-      {words.map((word, index) => {
-        const isActive = index === currentIndex;
-        return (
-          <span
-            key={index}
-            ref={(el) => {
-              wordRefs.current[index] = el;
-            }}
-            className="focus-word"
-            style={{
-              filter: isActive ? 'blur(0px)' : `blur(${blurAmount}px)`,
-              transition: `filter ${animationDuration}s ease`,
-              ['--border-color' as string]: borderColor,
-              ['--glow-color' as string]: glowColor,
-            }}
-            onMouseEnter={() => {
-              if (manualMode) {
-                setLastActiveIndex(index);
-                setCurrentIndex(index);
-              }
-            }}
-            onMouseLeave={() => {
-              if (manualMode && lastActiveIndex !== null) setCurrentIndex(lastActiveIndex);
-            }}
-          >
-            {word}
-          </span>
-        );
-      })}
-
-      <motion.div
-        className="focus-frame"
-        animate={{
-          x: focusRect.x,
-          y: focusRect.y,
-          width: focusRect.width,
-          height: focusRect.height,
-          opacity: 1,
-        }}
-        transition={{ duration: animationDuration }}
-        style={{
-          ['--border-color' as string]: borderColor,
-          ['--glow-color' as string]: glowColor,
-        }}
-      >
-        <span className="corner top-left" />
-        <span className="corner top-right" />
-        <span className="corner bottom-left" />
-        <span className="corner bottom-right" />
-      </motion.div>
-    </div>
-  );
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
-const menuItems = [
-  { link: 'https://torneo-sotto-orologio.vercel.app/', text: 'Progetto 1', image: 'https://picsum.photos/seed/p1/400/200' },
-  { link: 'https://svapo-house-web.vercel.app/', text: 'Progetto 2', image: 'https://picsum.photos/seed/p2/400/200' },
-  { link: 'https://la-perla-avetrana.vercel.app/', text: 'Progetto 3', image: 'https://picsum.photos/seed/p3/400/200' },
-  { link: 'https://gradi-3-3.vercel.app/', text: 'Progetto 4', image: 'https://picsum.photos/seed/p4/400/200' },
-];
+body {
+  background: #060608;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-export default function App() {
-  const [projOpen, setProjOpen] = useState(false);
+body.menu-open {
+  overflow: hidden;
+}
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', projOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [projOpen]);
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow: visible;
+}
 
-  return (
-    <div className="page">
-      <div className="bg-layer">
-        <LiquidEther />
-      </div>
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
 
-      <div className="bg-image-right" />
+.bg-image-right {
+  position: fixed;
+  right: -80px;
+  top: 0;
+  width: 55vw;
+  height: 100vh;
+  background: url('/profilo.jpeg') center top / cover no-repeat;
+  filter: blur(8px) brightness(0.6) saturate(1.2);
+  opacity: 0.9;
+  z-index: 1;
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.6) 30%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.6) 30%, black 100%);
+}
 
-      <div className="content-layer">
-        <nav className="navbar">
-          <div className="logo">MIRKO.</div>
-          <div className="nav-links">
-            <button className="nav-link" onClick={() => setProjOpen((o) => !o)}>
-              Progetti {projOpen ? '▴' : '▾'}
-            </button>
+.content-layer {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+}
 
-            <a
-              className="nav-link nav-gh"
-              href="https://github.com/mirko77-web"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="gh-icon">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-                </svg>
-              </span>
-              GitHub
-            </a>
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 2rem;
+  position: relative;
+  z-index: 10;
+}
 
-            <a
-              className="nav-link nav-ig"
-              href="https://www.instagram.com/mirko_priscia?igsh=MWF0cW9jOTYyb3JtYw=="
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="ig-icon" />
-              Instagram
-            </a>
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #fff;
+}
 
-            <a className="nav-link" href="mailto:mirkoprisciano@gmail.com">
-              <span className="gmail-icon">✉</span>
-              Gmail
-            </a>
-          </div>
-        </nav>
+.nav-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-        <div className="hero">
-          <div className="hero-text">
-            <p className="welcome-text">Ciao, sono</p>
+.nav-link {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  padding: 7px 15px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-            <TrueFocus
-              sentence="I am Mirko"
-              manualMode={false}
-              blurAmount={5}
-              borderColor="#3ecf8e"
-              glowColor="rgba(62,207,142,0.6)"
-              animationDuration={0.5}
-              pauseBetweenAnimations={1}
-            />
+.nav-link:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
 
-            <p className="subtitle">
-              Creative & Coder · Design,
-              <br />
-              sviluppo web e contenuti visivi
-            </p>
+.ig-icon {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-            <div className="skills-row">
-              {['React', 'TypeScript', 'Tailwind', 'Html', 'JavaScript', 'Vite', 'Figma', 'Video', 'Social'].map(
-                (s) => (
-                  <span key={s} className="skill-tag">
-                    {s}
-                  </span>
-                )
-              )}
-            </div>
+.ig-icon::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  border: 1.2px solid rgba(255, 255, 255, 0.9);
+}
 
-            <div className="cta-row">
-              <button className="btn-d" onClick={() => setProjOpen((o) => !o)}>
-                <span>I miei progetti</span>
-                <span className="btn-arrow">→</span>
-              </button>
+.hero {
+  position: relative;
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: flex-start;
+  padding: 0.7rem clamp(1.5rem, 6vw, 5rem) 1.2rem;
+}
 
-              <div className="btn-divider" />
+.hero-text {
+  position: relative;
+  z-index: 5;
+  max-width: 560px;
+  margin-top: 0.2rem;
+}
 
-              <a className="btn-d2" href="mailto:tua@gmail.com">
-                <span>Parliamo del tuo progetto</span>
-                <span className="btn-arrow2">↗</span>
-              </a>
-            </div>
+.welcome-text {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: rgb(255, 255, 255);
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
 
-            <div className={`projects-section ${projOpen ? 'open' : ''}`}>
-              <FlowingMenu
-                items={menuItems}
-                speed={18}
-                textColor="#fff"
-                bgColor="#050505"
-                marqueeBgColor="#3ecf8e"
-                marqueeTextColor="#000"
-                borderColor="#1a1a1a"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+.photo-wrap {
+  width: 190px;
+  height: 240px;
+  border-radius: 95px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 30px rgba(62, 207, 142, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 52px;
+  font-weight: 800;
+  color: #2a2a2a;
+}
+
+.title-wrap {
+  margin: 0.15rem 0 0.25rem;
+}
+
+.big-title .focus-word {
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+  line-height: 1.7;
+  margin-top: 0.55rem;
+}
+
+.skills-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 0.55rem;
+}
+
+.skill-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 20px;
+  color: rgb(130, 255, 5);
+}
+
+.cta-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  align-items: center;
+}
+
+.btn-d {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: gap 0.2s;
+}
+
+.btn-d:hover {
+  gap: 16px;
+}
+
+.btn-arrow {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-d:hover .btn-arrow {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-d2 {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: gap 0.2s;
+}
+
+.btn-d2:hover {
+  gap: 16px;
+}
+
+.btn-arrow2 {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(62, 207, 142, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #3ecf8e;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-d2:hover .btn-arrow2 {
+  background: rgba(62, 207, 142, 0.08);
+  border-color: #3ecf8e;
+}
+
+.btn-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.projects-section {
+  position: relative;
+  width: 100%;
+  z-index: 50;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  margin-top: 1rem;
+}
+
+.projects-section.open {
+  max-height: 420px;
+}
+
+.projects-section .menu-wrap {
+  background: rgba(4, 4, 6, 0.95) !important;
+  backdrop-filter: blur(12px);
+}
+
+.projects-section .menu {
+  min-height: 280px;
+}
+
+.projects-section .menu__item {
+  min-height: 80px;
+}
+
+.projects-section .menu__item-link {
+  font-size: clamp(1.2rem, 3.5vw, 3vh) !important;
+}
+
+.projects-section .marquee span {
+  font-size: clamp(1.2rem, 3.5vw, 3vh) !important;
+}
+
+.focus-container {
+  position: relative;
+  display: flex;
+  gap: 0.12em;
+  align-items: center;
+  flex-wrap: wrap;
+  user-select: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.focus-word {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: -2px;
+}
+
+.focus-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 14px var(--glow-color);
+  border-radius: 8px;
+}
+
+.corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--border-color);
+  border-style: solid;
+}
+
+.top-left {
+  top: -4px;
+  left: -4px;
+  border-width: 2px 0 0 2px;
+}
+
+.top-right {
+  top: -4px;
+  right: -4px;
+  border-width: 2px 2px 0 0;
+}
+
+.bottom-left {
+  bottom: -4px;
+  left: -4px;
+  border-width: 0 0 2px 2px;
+}
+
+.bottom-right {
+  bottom: -4px;
+  right: -4px;
+  border-width: 0 2px 2px 0;
+}
+
+@media (max-width: 650px) {
+  .navbar {
+    padding: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .hero {
+    padding: 1rem 1.2rem 2rem;
+    min-height: auto;
+  }
+
+  .hero-text {
+    max-width: 100%;
+  }
+
+  .welcome-text {
+    margin-bottom: 0.7rem;
+  }
+
+  .focus-word {
+    font-size: clamp(2.8rem, 12vw, 4rem) !important;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .bg-image-right {
+    width: 90vw;
+    right: -20px;
+    top: 40px;
+    height: 65vh;
+    opacity: 0.7;
+    filter: blur(4px) brightness(0.75) saturate(1.1);
+  }
+
+  .photo-wrap {
+    width: 160px;
+    height: 210px;
+    margin-bottom: 0.6rem;
+  }
+
+  .skills-row {
+    gap: 6px;
+  }
+
+  .cta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-divider {
+    display: none;
+  }
+
+  .projects-section {
+    margin-top: 0.8rem;
+  }
+}
+
+.wow-card {
+  position: relative;
+  margin-top: 1.2rem;
+  padding: 1rem 1rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+.wow-card-glow {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(62, 207, 142, 0.18), transparent 55%);
+  pointer-events: none;
+}
+
+.wow-card-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.wow-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wow-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.wow-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wow-text {
+  position: relative;
+  margin-top: 0.9rem;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+@media (max-width: 650px) {
+  .wow-card-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .wow-num {
+    font-size: 1.5rem;
+  }
+
+  .wow-card {
+    padding: 0.95rem;
+  }
+}
+
+/* =========================
+   MOBILE FIX (NON INVASIVO)
+========================= */
+@media (max-width: 650px) {
+
+  /* HERO più naturale */
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.2rem;
+    min-height: auto;
+  }
+
+  /* evita che il testo venga coperto dalla foto */
+  .hero-text {
+    margin-top: 38vh;
+    max-width: 100%;
+  }
+
+  /* immagine sistemata */
+  .bg-image-right {
+    position: absolute;
+    width: 100%;
+    height: 40vh;
+    right: 0;
+    top: 0;
+    opacity: 0.45;
+    filter: blur(5px) brightness(0.7);
+  }
+
+  /* titolo più piccolo */
+  .focus-word {
+    font-size: clamp(2.3rem, 10vw, 3.2rem) !important;
+    letter-spacing: -1px;
+  }
+
+  /* navbar più ordinata */
+  .navbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* skills leggibili */
+  .skill-tag {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  /* CTA in colonna */
+  .cta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* card stats più compatta */
+  .wow-card-inner {
+    grid-template-columns: 1fr;
+  }
+
+  /* progetti meno schiacciati */
+  .projects-section.open {
+    max-height: 500px;
+  }
+
 }

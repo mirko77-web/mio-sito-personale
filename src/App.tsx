@@ -157,7 +157,7 @@ export default function App() {
               rel="noreferrer"
             >
            
-              <img src="public/insta logo.png" width={20} height={20} alt="Instagram" />Instagram
+              <img src="public/insta-logo.png" width={20} height={20} alt="Instagram" />Instagram
             </a>
 
             <a className="nav-link" href="mailto:mirkoprisciano@gmail.com">
