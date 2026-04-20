@@ -537,22 +537,14 @@ body.menu-open {
    MOBILE FIX (NON INVASIVO)
 ========================= */
 @media (max-width: 650px) {
-  .bg-image-right {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 120vw;
-    height: 100vh;
-    transform: translate(-50%, -50%);
-    
-    background: url('/profilo.jpeg') center center / cover no-repeat;
 
-    opacity: 0.75; /* più visibile */
-    filter: blur(4px) brightness(0.85);
-
-    z-index: 1;
+  /* HERO più naturale */
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.2rem;
+    min-height: auto;
   }
-}
 
   /* evita che il testo venga coperto dalla foto */
   .hero-text {
@@ -609,6 +601,38 @@ body.menu-open {
   /* progetti meno schiacciati */
   .projects-section.open {
     max-height: 500px;
+  }
+
+}
+
+/* =========================
+   MOBILE FIX FOTO (FORZATO)
+========================= */
+@media (max-width: 650px) {
+
+  .bg-image-right {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+
+    width: 120vw !important;
+    height: 100vh !important;
+
+    transform: translate(-50%, -50%) !important;
+
+    background-position: center center !important;
+    background-size: cover !important;
+
+    opacity: 0.8 !important;
+    filter: blur(3px) brightness(0.9) !important;
+
+    z-index: 1 !important;
+  }
+
+  /* testo sopra la foto */
+  .content-layer {
+    position: relative;
+    z-index: 5;
   }
 
 }
