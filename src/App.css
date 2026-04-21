@@ -11,7 +11,6 @@ html, body, #root {
 }
 
 body {
-  /* ✅ Nero puro minimal, rimosso qualsiasi tinta blu */
   background: #080808;
   color: #fff;
   font-family: 'DM Sans', sans-serif;
@@ -30,7 +29,6 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* ✅ Nasconde eventuali tinte colorate del LiquidEther su mobile */
   mix-blend-mode: luminosity;
   opacity: 0.08;
 }
@@ -118,15 +116,13 @@ body {
   border-color: var(--border-color);
   border-style: solid;
 }
-
-.top-left { top: -4px; left: -4px; border-width: 2px 0 0 2px; }
-.top-right { top: -4px; right: -4px; border-width: 2px 2px 0 0; }
-.bottom-left { bottom: -4px; left: -4px; border-width: 0 0 2px 2px; }
-.bottom-right { bottom: -4px; right: -4px; border-width: 0 2px 2px 0; }
+.top-left    { top: -4px; left: -4px;   border-width: 2px 0 0 2px; }
+.top-right   { top: -4px; right: -4px;  border-width: 2px 2px 0 0; }
+.bottom-left { bottom: -4px; left: -4px;  border-width: 0 0 2px 2px; }
+.bottom-right{ bottom: -4px; right: -4px; border-width: 0 2px 2px 0; }
 
 .subtitle {
   font-size: 14px;
-  /* ✅ Bianco pieno */
   color: #ffffff;
   line-height: 1.7;
   margin-top: 0.6rem;
@@ -146,7 +142,6 @@ body {
   border-radius: 20px;
   padding: 3px 12px;
   font-size: 11px;
-  /* ✅ Bianco più visibile */
   color: rgba(255,255,255,0.75);
 }
 
@@ -176,11 +171,7 @@ body {
   gap: 10px;
   transition: opacity 0.2s, transform 0.15s;
 }
-
-.btn-main:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
+.btn-main:hover { opacity: 0.9; transform: translateY(-2px); }
 
 .btn-main-arr {
   width: 26px;
@@ -212,7 +203,6 @@ body {
   gap: 10px;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
-
 .btn-outline:hover {
   background: rgba(62,207,142,0.07);
   border-color: #3ecf8e;
@@ -258,11 +248,7 @@ body {
   gap: 10px;
 }
 
-.wow-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.wow-stat { display: flex; flex-direction: column; gap: 4px; }
 
 .wow-num {
   font-family: 'Syne', sans-serif;
@@ -274,7 +260,6 @@ body {
 
 .wow-label {
   font-size: 10px;
-  /* ✅ Bianco più leggibile */
   color: rgba(255,255,255,0.65);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -285,22 +270,24 @@ body {
   margin-top: 0.9rem;
   font-size: 12px;
   line-height: 1.7;
-  /* ✅ Bianco più leggibile */
   color: rgba(255,255,255,0.75);
 }
 
-/* PROJECTS */
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+
+/* Sezione progetti — sempre visibile */
 .projects-showcase {
-  margin-top: 4rem;
-  padding: 1rem 0 4rem;
+  padding: 1rem clamp(1.5rem, 6vw, 5rem) 4rem;
 }
 
 .projects-head {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
   gap: 1rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 2rem;
 }
 
 .projects-kicker {
@@ -317,20 +304,35 @@ body {
   color: #fff;
 }
 
+/* Bottone chiudi — ora funziona */
 .projects-close {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.7);
   border-radius: 999px;
-  padding: 0.55rem 1rem;
+  padding: 0.5rem 1.1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
   cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.projects-close:hover {
+  border-color: rgba(255,80,80,0.5);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
+/* Grid progetti */
 .projects-showcase-grid {
   display: grid;
-  gap: 1.2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.4rem;
 }
 
+/* ============================================================
+   PROJECT CARD — redesign editoriale
+   ============================================================ */
 .project-showcase-card {
   position: relative;
   display: flex;
@@ -338,117 +340,385 @@ body {
   justify-content: flex-end;
   text-decoration: none;
   color: #fff;
-  min-height: 320px;
-  border-radius: 28px;
+  min-height: 380px;
+  border-radius: 20px;
   overflow: hidden;
-  background: transparent;
-  border: 0;
-  transition: transform 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  cursor: pointer;
 }
 
-.project-showcase-card::before {
-  content: '';
+/* Prima card: grande, full-width */
+.project-showcase-card:first-child {
+  grid-column: 1 / -1;
+  min-height: 460px;
+}
+
+/* Immagine: nitida, nessun blur */
+.card-image-layer {
   position: absolute;
   inset: 0;
   background-image: var(--card-image);
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  filter: blur(8px) brightness(0.6) saturate(1.1);
-  transform: scale(1.12);
+  transform: scale(1.0);
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 0;
 }
 
-.project-showcase-card::after {
-  content: '';
+/* Gradiente: trasparente in alto → nero opaco in basso */
+.card-gradient-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.18);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.15) 40%,
+    rgba(0,0,0,0.72) 75%,
+    rgba(0,0,0,0.92) 100%
+  );
   z-index: 1;
 }
 
-.project-showcase-card:hover {
-  transform: translateY(-4px);
+/* Badge tech — pillola in alto a destra */
+.card-tech-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(62,207,142,0.35);
+  color: #3ecf8e;
+  font-size: 10px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
 }
 
+/* Hover: zoom immagine + shadow verde */
+.project-showcase-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(62,207,142,0.15);
+}
+.project-showcase-card:hover .card-image-layer {
+  transform: scale(1.06);
+}
+
+/* Testo in basso */
 .project-showcase-copy {
   position: relative;
   z-index: 2;
-  padding: 1.4rem;
+  padding: 1.4rem 1.5rem 1.6rem;
 }
 
 .project-showcase-num {
   display: inline-block;
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: #3ecf8e;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .project-showcase-copy h3 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
-  margin-bottom: 0.35rem;
+  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+  line-height: 1.1;
 }
 
 .project-showcase-copy p {
-  color: rgba(255,255,255,0.7);
-  font-size: 0.95rem;
-  margin-bottom: 0.8rem;
-  max-width: 32ch;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
 }
 
+/* Link con animazione underline */
 .project-showcase-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(62,207,142,0.4);
+  padding-bottom: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.project-showcase-card:hover .project-showcase-link {
   color: #3ecf8e;
-  font-size: 0.95rem;
+  border-color: #3ecf8e;
+}
+.link-arrow {
+  transition: transform 0.2s;
+}
+.project-showcase-card:hover .link-arrow {
+  transform: translate(2px, -2px);
 }
 
-/* STAGGERED MENU */
-.staggered-menu-wrapper {
-  position: relative;
-  z-index: 50;
-}
+/* ============================================================
+   MODALE CONTATTO
+   ============================================================ */
 
-.staggered-menu-btn {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 60;
-}
-
-.staggered-menu-overlay {
+.modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 55;
-  opacity: 0;
-  visibility: hidden;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: backdropIn 0.25s ease;
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-box {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: #111113;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 2rem 2rem 2.2rem;
+  overflow: hidden;
+  animation: modalUp 0.32s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@keyframes modalUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.modal-glow {
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(62,207,142,0.13), transparent 65%);
   pointer-events: none;
 }
 
-.staggered-menu-overlay.open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+/* Header modale */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.8rem;
 }
 
-.staggered-menu-inner {
-  position: relative;
-  z-index: 56;
+.modal-kicker {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #3ecf8e;
+  margin-bottom: 0.3rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
 }
 
-/* MOBILE */
-@media (max-width: 900px) {
-  .project-showcase-card {
-    min-height: 280px;
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.modal-close-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+.modal-close-btn:hover {
+  background: rgba(255,80,80,0.15);
+  color: #fff;
+  border-color: rgba(255,80,80,0.3);
+}
+
+/* Form */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.modal-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+.modal-input,
+.modal-textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  resize: none;
+  width: 100%;
+}
+
+.modal-input::placeholder,
+.modal-textarea::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+
+.modal-input:focus,
+.modal-textarea:focus {
+  border-color: rgba(62,207,142,0.5);
+  background: rgba(62,207,142,0.04);
+}
+
+/* Bottone invio */
+.modal-send-btn {
+  margin-top: 0.4rem;
+  background: #3ecf8e;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s, transform 0.15s;
+  width: 100%;
+}
+.modal-send-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.modal-send-arr {
+  font-size: 16px;
+}
+
+/* Stato inviato */
+.modal-sent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.5rem 0 0.5rem;
+  text-align: center;
+}
+
+.modal-sent-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(62,207,142,0.15);
+  border: 1px solid rgba(62,207,142,0.4);
+  color: #3ecf8e;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-sent-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.modal-sent-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  max-width: 30ch;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile modale */
+@media (max-width: 540px) {
+  .modal-box {
+    padding: 1.5rem 1.2rem 1.8rem;
+    border-radius: 20px;
+  }
+  .modal-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .modal-title {
+    font-size: 1.1rem;
   }
 }
 
+/* STAGGERED MENU */
+.staggered-menu-wrapper { position: relative; z-index: 50; }
+.staggered-menu-btn { position: fixed; top: 16px; right: 16px; z-index: 60; }
+.staggered-menu-overlay {
+  position: fixed; inset: 0; z-index: 55;
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.staggered-menu-overlay.open {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+.staggered-menu-inner { position: relative; z-index: 56; }
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
 @media (max-width: 768px) {
-  /* ✅ Foto principale: zero blur, più luminosa, desaturata per evitare tinte colorate */
   .page .bg-image-right {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     width: 100vw;
     height: 52vh;
     right: auto;
@@ -461,106 +731,51 @@ body {
     mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 60%, transparent 100%);
   }
 
-  /* ✅ Su mobile il LiquidEther non deve aggiungere tonalità */
-  .bg-layer {
-    opacity: 0 !important;
-  }
+  .bg-layer { opacity: 0 !important; }
 
   .hero {
     min-height: auto;
     padding: 26vh 1rem 1.2rem;
     align-items: flex-start;
   }
+  .hero-text { max-width: 100%; }
+  .welcome-text { font-size: 9px; color: #ffffff; }
 
-  .hero-text {
-    max-width: 100%;
-  }
+  .focus-container { justify-content: flex-start; width: 100%; }
+  .focus-word { font-size: clamp(2.8rem, 12vw, 4.5rem) !important; }
 
-  .welcome-text {
-    font-size: 9px;
-    letter-spacing: 0.22em;
-    color: #ffffff;
-  }
+  .subtitle { font-size: 12px; line-height: 1.6; color: #ffffff; }
 
-  .focus-container {
-    justify-content: flex-start;
-    width: 100%;
-  }
+  .skill-tag { font-size: 9px; padding: 3px 10px; color: rgba(255,255,255,0.8); }
+  .cta-row { margin-top: 1rem; }
+  .btn-outline { width: 100%; justify-content: center; }
 
-  .focus-word {
-    font-size: clamp(2.8rem, 12vw, 4.5rem) !important;
-  }
+  .wow-card { margin-top: 1rem; max-width: 100%; }
+  .wow-num { font-size: 1.4rem; }
+  .wow-label { color: rgba(255,255,255,0.7); }
+  .wow-text { color: rgba(255,255,255,0.8); }
 
-  .subtitle {
-    font-size: 12px;
-    line-height: 1.6;
-    color: #ffffff;
-  }
-
-  .skills-row {
-    gap: 6px;
-  }
-
-  .skill-tag {
-    font-size: 9px;
-    padding: 3px 10px;
-    color: rgba(255,255,255,0.8);
-  }
-
-  .cta-row {
-    margin-top: 1rem;
-  }
-
-  .btn-outline {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .wow-card {
-    margin-top: 1rem;
-    max-width: 100%;
-  }
-
-  .wow-card-inner {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .wow-num {
-    font-size: 1.4rem;
-  }
-
-  .wow-label {
-    color: rgba(255,255,255,0.7);
-  }
-
-  .wow-text {
-    color: rgba(255,255,255,0.8);
-  }
-
+  /* Sezione progetti */
   .projects-showcase {
-    margin-top: 2.5rem;
-    padding-bottom: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
-  .projects-head {
-    align-items: flex-end;
+  /* Grid: colonna singola su mobile */
+  .projects-showcase-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
+  .project-showcase-card:first-child {
+    grid-column: 1;
+    min-height: 300px;
+  }
   .project-showcase-card {
-    min-height: 240px;
+    min-height: 260px;
   }
-
-  .project-showcase-copy {
-    padding: 1.1rem;
-  }
-
-  .project-showcase-copy h3 {
-    font-size: 1.35rem;
-  }
-
-  .project-showcase-copy p {
-    font-size: 0.9rem;
-  }
+  .project-showcase-copy { padding: 1rem 1.1rem 1.2rem; }
+  .project-showcase-copy h3 { font-size: 1.3rem; }
+  .project-showcase-copy p { font-size: 0.85rem; }
 }
 
 @media (max-width: 650px) {
