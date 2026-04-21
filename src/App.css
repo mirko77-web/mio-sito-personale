@@ -11,7 +11,8 @@ html, body, #root {
 }
 
 body {
-  background: #060608;
+  /* ✅ Nero puro minimal, rimosso qualsiasi tinta blu */
+  background: #080808;
   color: #fff;
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
@@ -29,6 +30,9 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* ✅ Nasconde eventuali tinte colorate del LiquidEther su mobile */
+  mix-blend-mode: luminosity;
+  opacity: 0.08;
 }
 
 .bg-image-right {
@@ -70,7 +74,7 @@ body {
 .welcome-text {
   font-size: 10px;
   letter-spacing: 0.22em;
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
@@ -122,7 +126,8 @@ body {
 
 .subtitle {
   font-size: 14px;
-  color: rgb(255, 255, 255);
+  /* ✅ Bianco pieno */
+  color: #ffffff;
   line-height: 1.7;
   margin-top: 0.6rem;
 }
@@ -136,12 +141,13 @@ body {
 }
 
 .skill-tag {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 20px;
   padding: 3px 12px;
   font-size: 11px;
-  color: rgba(255,255,255,0.45);
+  /* ✅ Bianco più visibile */
+  color: rgba(255,255,255,0.75);
 }
 
 /* CTA */
@@ -268,7 +274,8 @@ body {
 
 .wow-label {
   font-size: 10px;
-  color: rgba(255,255,255,0.35);
+  /* ✅ Bianco più leggibile */
+  color: rgba(255,255,255,0.65);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -278,7 +285,8 @@ body {
   margin-top: 0.9rem;
   font-size: 12px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.5);
+  /* ✅ Bianco più leggibile */
+  color: rgba(255,255,255,0.75);
 }
 
 /* PROJECTS */
@@ -346,7 +354,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
- filter: blur(8px) brightness(0.6) saturate(1.1);
+  filter: blur(8px) brightness(0.6) saturate(1.1);
   transform: scale(1.12);
   z-index: 0;
 }
@@ -436,22 +444,28 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* ✅ Foto principale: zero blur, più luminosa, desaturata per evitare tinte colorate */
   .page .bg-image-right {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    height: 48vh;
+    height: 52vh;
     right: auto;
     background-position: center top;
     background-size: cover;
-    filter: blur(2px) brightness(0.58) saturate(1.08) !important;
-    opacity: 0.9;
+    filter: brightness(0.75) saturate(0.6) !important;
+    opacity: 1;
     z-index: 1;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 60%, transparent 100%);
   }
-}
+
+  /* ✅ Su mobile il LiquidEther non deve aggiungere tonalità */
+  .bg-layer {
+    opacity: 0 !important;
+  }
+
   .hero {
     min-height: auto;
     padding: 26vh 1rem 1.2rem;
@@ -465,6 +479,7 @@ body {
   .welcome-text {
     font-size: 9px;
     letter-spacing: 0.22em;
+    color: #ffffff;
   }
 
   .focus-container {
@@ -479,6 +494,7 @@ body {
   .subtitle {
     font-size: 12px;
     line-height: 1.6;
+    color: #ffffff;
   }
 
   .skills-row {
@@ -488,6 +504,7 @@ body {
   .skill-tag {
     font-size: 9px;
     padding: 3px 10px;
+    color: rgba(255,255,255,0.8);
   }
 
   .cta-row {
@@ -510,6 +527,14 @@ body {
 
   .wow-num {
     font-size: 1.4rem;
+  }
+
+  .wow-label {
+    color: rgba(255,255,255,0.7);
+  }
+
+  .wow-text {
+    color: rgba(255,255,255,0.8);
   }
 
   .projects-showcase {
