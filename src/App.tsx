@@ -1,124 +1,49 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { useState } from 'react';
 import LiquidEther from './LiquidEther';
-import FlowingMenu from './FlowingMenu';
+import StaggeredMenu from './StaggeredMenu';
+import TrueFocus from './TrueFocus';
 import './App.css';
 
-interface TrueFocusProps {
-  sentence?: string;
-  manualMode?: boolean;
-  blurAmount?: number;
-  borderColor?: string;
-  glowColor?: string;
-  animationDuration?: number;
-  pauseBetweenAnimations?: number;
-}
-
-function TrueFocus({
-  sentence = 'True Focus',
-  manualMode = false,
-  blurAmount = 5,
-  borderColor = '#3ecf8e',
-  glowColor = 'rgba(62,207,142,0.6)',
-  animationDuration = 0.5,
-  pauseBetweenAnimations = 1,
-}: TrueFocusProps) {
-  const words = sentence.split(' ');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [lastActiveIndex, setLastActiveIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 });
-
-  useEffect(() => {
-    if (!manualMode) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % words.length);
-      }, (animationDuration + pauseBetweenAnimations) * 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);
-
-  useEffect(() => {
-    if (!wordRefs.current[currentIndex] || !containerRef.current) return;
-
-    const parentRect = containerRef.current.getBoundingClientRect();
-    const activeRect = wordRefs.current[currentIndex]!.getBoundingClientRect();
-
-    setFocusRect({
-      x: activeRect.left - parentRect.left,
-      y: activeRect.top - parentRect.top,
-      width: activeRect.width,
-      height: activeRect.height,
-    });
-  }, [currentIndex, words.length]);
-
-  return (
-    <div className="focus-container" ref={containerRef}>
-      {words.map((word, index) => {
-        const isActive = index === currentIndex;
-        return (
-          <span
-            key={index}
-            ref={(el) => {
-              wordRefs.current[index] = el;
-            }}
-            className="focus-word"
-            style={{
-              filter: isActive ? 'blur(0px)' : `blur(${blurAmount}px)`,
-              transition: `filter ${animationDuration}s ease`,
-              ['--border-color' as string]: borderColor,
-              ['--glow-color' as string]: glowColor,
-            }}
-            onMouseEnter={() => {
-              if (manualMode) {
-                setLastActiveIndex(index);
-                setCurrentIndex(index);
-              }
-            }}
-            onMouseLeave={() => {
-              if (manualMode && lastActiveIndex !== null) setCurrentIndex(lastActiveIndex);
-            }}
-          >
-            {word}
-          </span>
-        );
-      })}
-
-      <motion.div
-        className="focus-frame"
-        animate={{
-          x: focusRect.x,
-          y: focusRect.y,
-          width: focusRect.width,
-          height: focusRect.height,
-          opacity: 1,
-        }}
-        transition={{ duration: animationDuration }}
-        style={{
-          ['--border-color' as string]: borderColor,
-          ['--glow-color' as string]: glowColor,
-        }}
-      >
-        <span className="corner top-left" />
-        <span className="corner top-right" />
-        <span className="corner bottom-left" />
-        <span className="corner bottom-right" />
-      </motion.div>
-    </div>
-  );
-}
-
-const menuItems = [
-  { link: 'https://torneo-sotto-orologio.vercel.app/', text: 'Progetto 1', image: 'https://picsum.photos/seed/p1/400/200' },
-  { link: 'https://svapo-house-web.vercel.app/', text: 'Progetto 2', image: 'https://picsum.photos/seed/p2/400/200' },
-  { link: 'https://la-perla-avetrana.vercel.app/', text: 'Progetto 3', image: 'https://picsum.photos/seed/p3/400/200' },
-  { link: 'https://gradi-3-3.vercel.app/', text: 'Progetto 4', image: 'https://picsum.photos/seed/p4/400/200' },
+const PROJECTS = [
+  {
+    num: '01',
+    name: 'Torneo sotto orologio',
+    desc: 'Web app · React',
+    link: 'https://torneo-sotto-orologio.vercel.app/',
+    image: '/torneo oriz.jpg',
+  },
+  {
+    num: '02',
+    name: 'Svapo House',
+    desc: 'E-commerce · Vite',
+    link: 'https://svapo-house-web.vercel.app/',
+    image: '/svapo.png',
+  },
+  {
+    num: '03',
+    name: 'La Perla Avetrana',
+    desc: 'Sito locale · React',
+    link: 'https://la-perla-avetrana.vercel.app/',
+    image: '/laperla.jpeg',
+  },
+  {
+    num: '04',
+    name: 'Gradi 3.3',
+    desc: 'Portfolio · Vite',
+    link: 'https://gradi-3-3.vercel.app/',
+    image: '/logook.png',
+  },
 ];
 
 export default function App() {
-  const [projOpen, setProjOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
+
+  const openProjects = () => {
+    setProjectsOpen(true);
+    setTimeout(() => {
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
 
   return (
     <div className="page">
@@ -129,47 +54,9 @@ export default function App() {
       <div className="bg-image-right" />
 
       <div className="content-layer">
-        <nav className="navbar">
-          <div className="logo">MIRKO.</div>
-          <div className="nav-links">
-            <button className="nav-link" onClick={() => setProjOpen((o) => !o)}>
-              Progetti {projOpen ? '▴' : '▾'}
-            </button>
-
-            <a
-              className="nav-link nav-gh"
-              href="https://github.com/mirko77-web"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="gh-icon">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-                </svg>
-              </span>
-              GitHub
-            </a>
-
-            <a
-              className="nav-link nav-ig"
-              href="https://www.instagram.com/mirko_priscia?igsh=MWF0cW9jOTYyb3JtYw=="
-              target="_blank"
-              rel="noreferrer"
-            >
-           
-              <img src="public/insta-logo.png" width={20} height={20} alt="Instagram" />Instagram
-            </a>
-
-            <a className="nav-link" href="mailto:mirkoprisciano@gmail.com">
-              <span className="gmail-icon">✉</span>
-              Gmail
-            </a>
-          </div>
-        </nav>
-
         <div className="hero">
           <div className="hero-text">
-            <p className="welcome-text">benvenuti nella mia pagina</p>
+            <p className="welcome-text">Benvenuti nella mia pagina</p>
 
             <TrueFocus
               sentence="I am Mirko"
@@ -188,26 +75,22 @@ export default function App() {
             </p>
 
             <div className="skills-row">
-              {['React', 'TypeScript', 'Tailwind', 'Html', 'JavaScript', 'Vite', 'Figma', 'Video', 'Social'].map(
-                (s) => (
-                  <span key={s} className="skill-tag">
-                    {s}
-                  </span>
-                )
-              )}
+              {['React', 'TypeScript', 'Tailwind', 'Html', 'JavaScript', 'Vite', 'Figma', 'Video', 'Social'].map((s) => (
+                <span key={s} className="skill-tag">
+                  {s}
+                </span>
+              ))}
             </div>
 
             <div className="cta-row">
-              <button className="btn-d" onClick={() => setProjOpen((o) => !o)}>
+              <button className="btn-main" onClick={openProjects}>
                 <span>I miei progetti</span>
-                <span className="btn-arrow">→</span>
+                <span className="btn-main-arr">→</span>
               </button>
 
-              <div className="btn-divider" />
-
-              <a className="btn-d2" href="mailto:tua@gmail.com">
+              <a className="btn-outline" href="mailto:mirkoprisciano@gmail.com">
                 <span>Parliamo del tuo progetto</span>
-                <span className="btn-arrow2">↗</span>
+                <span className="btn-outline-arr">↗</span>
               </a>
             </div>
 
@@ -231,21 +114,68 @@ export default function App() {
                 Web design, frontend e contenuti visivi con un approccio pulito, moderno e focalizzato sulla conversione.
               </p>
             </div>
-
-            <div className={`projects-section ${projOpen ? 'open' : ''}`}>
-              <FlowingMenu
-                items={menuItems}
-                speed={18}
-                textColor="#fff"
-                bgColor="#050505"
-                marqueeBgColor="#3ecf8e"
-                marqueeTextColor="#000"
-                borderColor="#1a1a1a"
-              />
-            </div>
           </div>
         </div>
+
+        {projectsOpen && (
+          <section id="projects" className="projects-showcase">
+            <div className="projects-head">
+              <div>
+                <p className="projects-kicker">Portfolio</p>
+                <h2>I miei progetti</h2>
+              </div>
+
+              <button className="projects-close" onClick={() => setProjectsOpen(false)}>
+                Chiudi
+              </button>
+            </div>
+
+            <div className="projects-showcase-grid">
+              {PROJECTS.map((project, index) => (
+                <a
+                  key={project.num}
+                  className={`project-showcase-card ${index % 2 === 0 ? 'left' : 'right'}`}
+                  href={project.link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="project-showcase-image">
+                    <img src={project.image} alt={project.name} />
+                  </div>
+
+                  <div className="project-showcase-copy">
+                    <span className="project-showcase-num">{project.num}</span>
+                    <h3>{project.name}</h3>
+                    <p>{project.desc}</p>
+                    <span className="project-showcase-link">Apri progetto ↗</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
+
+      <StaggeredMenu
+        position="right"
+        items={[
+          { label: 'Home', ariaLabel: 'Vai alla home', link: '/' },
+          { label: 'Progetti', ariaLabel: 'I miei progetti', link: '#projects' },
+          { label: 'Contatti', ariaLabel: 'Contattami', link: 'mailto:mirkoprisciano@gmail.com' },
+        ]}
+        socialItems={[
+          { label: 'GitHub', link: 'https://github.com/mirko77-web' },
+          { label: 'Instagram', link: 'https://www.instagram.com/mirko_priscia' },
+        ]}
+        displaySocials={true}
+        displayItemNumbering={true}
+        menuButtonColor="#ffffff"
+        openMenuButtonColor="#3ecf8e"
+        changeMenuColorOnOpen={true}
+        colors={['#0c0c0f', '#3ecf8e']}
+        logoUrl="/profilo.jpeg"
+        accentColor="#3ecf8e"
+      />
     </div>
   );
 }
