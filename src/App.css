@@ -436,7 +436,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .bg-image-right {
+  .page .bg-image-right {
     position: fixed;
     top: 0;
     left: 0;
@@ -445,14 +445,13 @@ body {
     right: auto;
     background-position: center top;
     background-size: cover;
-    filter: blur(2px) brightness(0.55) saturate(1.1);
+    filter: blur(2px) brightness(0.58) saturate(1.08) !important;
     opacity: 0.9;
     z-index: 1;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%);
   }
 }
-
   .hero {
     min-height: auto;
     padding: 26vh 1rem 1.2rem;
