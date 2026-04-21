@@ -445,7 +445,7 @@ body {
     right: auto;
     background-position: center top;
     background-size: cover;
-    filter: blur(4px) brightness(0.55) saturate(1.1);
+    filter: blur(2px) brightness(0.55) saturate(1.1);
     opacity: 0.9;
     z-index: 1;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 70%, transparent 100%);
