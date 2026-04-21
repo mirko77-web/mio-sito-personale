@@ -8,9 +8,9 @@ const PROJECTS = [
   {
     num: '01',
     name: 'Torneo sotto orologio',
-    desc: 'Web app · React',
+    desc: 'sito · React',
     link: 'https://torneo-sotto-orologio.vercel.app/',
-    image: '/torneo oriz.jpg',
+    image: '/torneo.jpg',
   },
   {
     num: '02',
@@ -29,7 +29,7 @@ const PROJECTS = [
   {
     num: '04',
     name: 'Gradi 3.3',
-    desc: 'Portfolio · Vite',
+    desc: 'sito/menù · Vite',
     link: 'https://gradi-3-3.vercel.app/',
     image: '/logook.png',
   },
@@ -37,13 +37,6 @@ const PROJECTS = [
 
 export default function App() {
   const [projectsOpen, setProjectsOpen] = useState(false);
-
-  const openProjects = () => {
-    setProjectsOpen(true);
-    setTimeout(() => {
-      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
-  };
 
   return (
     <div className="page">
@@ -76,18 +69,11 @@ export default function App() {
 
             <div className="skills-row">
               {['React', 'TypeScript', 'Tailwind', 'Html', 'JavaScript', 'Vite', 'Figma', 'Video', 'Social'].map((s) => (
-                <span key={s} className="skill-tag">
-                  {s}
-                </span>
+                <span key={s} className="skill-tag">{s}</span>
               ))}
             </div>
 
             <div className="cta-row">
-              <button className="btn-main" onClick={openProjects}>
-                <span>I miei progetti</span>
-                <span className="btn-main-arr">→</span>
-              </button>
-
               <a className="btn-outline" href="mailto:mirkoprisciano@gmail.com">
                 <span>Parliamo del tuo progetto</span>
                 <span className="btn-outline-arr">↗</span>
@@ -117,43 +103,38 @@ export default function App() {
           </div>
         </div>
 
-        {projectsOpen && (
-          <section id="projects" className="projects-showcase">
-            <div className="projects-head">
-              <div>
-                <p className="projects-kicker">Portfolio</p>
-                <h2>I miei progetti</h2>
-              </div>
-
-              <button className="projects-close" onClick={() => setProjectsOpen(false)}>
-                Chiudi
-              </button>
+        <section id="projects" className={`projects-showcase ${projectsOpen ? 'open' : ''}`}>
+          <div className="projects-head">
+            <div>
+              <p className="projects-kicker">Portfolio</p>
+              <h2>I miei progetti</h2>
             </div>
 
-            <div className="projects-showcase-grid">
-              {PROJECTS.map((project, index) => (
-                <a
-                  key={project.num}
-                  className={`project-showcase-card ${index % 2 === 0 ? 'left' : 'right'}`}
-                  href={project.link}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className="project-showcase-image">
-                    <img src={project.image} alt={project.name} />
-                  </div>
+            <button className="projects-close" onClick={() => setProjectsOpen(false)}>
+              Chiudi
+            </button>
+          </div>
 
-                  <div className="project-showcase-copy">
-                    <span className="project-showcase-num">{project.num}</span>
-                    <h3>{project.name}</h3>
-                    <p>{project.desc}</p>
-                    <span className="project-showcase-link">Apri progetto ↗</span>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
+          <div className="projects-showcase-grid">
+           {PROJECTS.map((project, index) => (
+  <a
+    key={project.num}
+    className={`project-showcase-card ${index % 2 === 0 ? 'left' : 'right'}`}
+    href={project.link}
+    target="_blank"
+    rel="noreferrer"
+    style={{ ['--card-image' as string]: `url(${project.image})` }}
+  >
+    <div className="project-showcase-copy">
+      <span className="project-showcase-num">{project.num}</span>
+      <h3>{project.name}</h3>
+      <p>{project.desc}</p>
+      <span className="project-showcase-link">Apri progetto ↗</span>
+    </div>
+  </a>
+))}
+          </div>
+        </section>
       </div>
 
       <StaggeredMenu
