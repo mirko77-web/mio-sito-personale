@@ -647,6 +647,94 @@ body {
   font-size: 16px;
 }
 
+/* ============================================================
+   CHOICE BOX — scelta contatto
+   ============================================================ */
+.choice-box {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: #111113;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 2rem;
+  overflow: hidden;
+  animation: modalUp 0.32s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.choice-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s, border-color 0.2s, transform 0.18s;
+  width: 100%;
+  text-align: left;
+}
+.choice-card:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(62,207,142,0.35);
+  transform: translateX(4px);
+}
+
+.choice-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.choice-icon--email {
+  background: rgba(62,207,142,0.12);
+  color: #3ecf8e;
+  border: 1px solid rgba(62,207,142,0.25);
+}
+.choice-icon--ig {
+  background: rgba(225,105,180,0.12);
+  color: #e169b4;
+  border: 1px solid rgba(225,105,180,0.25);
+}
+
+.choice-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.choice-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+}
+.choice-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+.choice-arrow {
+  font-size: 16px;
+  color: rgba(255,255,255,0.3);
+  transition: color 0.2s, transform 0.2s;
+}
+.choice-card:hover .choice-arrow {
+  color: #3ecf8e;
+  transform: translate(2px, -2px);
+}
+
 /* Stato inviato */
 .modal-sent {
   display: flex;

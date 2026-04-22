@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LiquidEther from './LiquidEther';
 import StaggeredMenu from './StaggeredMenu';
 import TrueFocus from './TrueFocus';
@@ -48,6 +48,7 @@ type ContactForm = {
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [contactChoiceOpen, setContactChoiceOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState<ContactForm>({
     nome: '',
@@ -56,11 +57,25 @@ export default function App() {
     messaggio: '',
   });
 
+  // Intercetta il click su "Contatti" nel menu (usa hash #contatti-scelta)
+  useEffect(() => {
+    function onHash() {
+      if (window.location.hash === '#contatti-scelta') {
+        setContactChoiceOpen(true);
+        document.body.style.overflow = 'hidden';
+        history.replaceState(null, '', window.location.pathname);
+      }
+    }
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
   function handleClose() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function openModal() {
+    setContactChoiceOpen(false);
     setModalOpen(true);
     setSent(false);
     document.body.style.overflow = 'hidden';
@@ -68,6 +83,11 @@ export default function App() {
 
   function closeModal() {
     setModalOpen(false);
+    document.body.style.overflow = '';
+  }
+
+  function closeChoice() {
+    setContactChoiceOpen(false);
     document.body.style.overflow = '';
   }
 
@@ -81,7 +101,8 @@ export default function App() {
     const body = encodeURIComponent(
       `Nome: ${form.nome} ${form.cognome}\nEmail: ${form.email}\n\nMessaggio:\n${form.messaggio}`
     );
-    window.location.href = `mailto:mirkoprisciano@gmail.com?subject=${subject}&body=${body}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=mirkoprisciano@gmail.com&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
     setSent(true);
     setForm({ nome: '', cognome: '', email: '', messaggio: '' });
   }
@@ -122,7 +143,6 @@ export default function App() {
             </div>
 
             <div className="cta-row">
-              {/* Bottone apre il modale */}
               <button className="btn-outline" onClick={openModal}>
                 <span>Parliamo del tuo progetto</span>
                 <span className="btn-outline-arr">↗</span>
@@ -190,15 +210,68 @@ export default function App() {
         </section>
       </div>
 
-      {/* ===== MODALE CONTATTO ===== */}
+      {/* ===== OVERLAY SCELTA CONTATTO ===== */}
+      {contactChoiceOpen && (
+        <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && closeChoice()}>
+          <div className="choice-box">
+            <div className="modal-glow" />
+
+            <div className="modal-header">
+              <div>
+                <p className="modal-kicker">Contatti</p>
+                <h3 className="modal-title">Come vuoi contattarmi?</h3>
+              </div>
+              <button className="modal-close-btn" onClick={closeChoice} aria-label="Chiudi">✕</button>
+            </div>
+
+            <div className="choice-options">
+              {/* Email */}
+              <button className="choice-card" onClick={openModal}>
+                <div className="choice-icon choice-icon--email">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                  </svg>
+                </div>
+                <div className="choice-info">
+                  <span className="choice-label">Email</span>
+                  <span className="choice-sub">mirkoprisciano@gmail.com</span>
+                </div>
+                <span className="choice-arrow">↗</span>
+              </button>
+
+              {/* Instagram */}
+              <a
+                className="choice-card"
+                href="https://www.instagram.com/mirko_priscia"
+                target="_blank"
+                rel="noreferrer"
+                onClick={closeChoice}
+              >
+                <div className="choice-icon choice-icon--ig">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                  </svg>
+                </div>
+                <div className="choice-info">
+                  <span className="choice-label">Instagram</span>
+                  <span className="choice-sub">@mirko_priscia</span>
+                </div>
+                <span className="choice-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== MODALE EMAIL ===== */}
       {modalOpen && (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && closeModal()}>
           <div className="modal-box">
-
-            {/* Glow decorativo */}
             <div className="modal-glow" />
 
-            {/* Header */}
             <div className="modal-header">
               <div>
                 <p className="modal-kicker">Contatti</p>
@@ -211,7 +284,7 @@ export default function App() {
               <div className="modal-sent">
                 <div className="modal-sent-icon">✓</div>
                 <p className="modal-sent-title">Messaggio inviato!</p>
-                <p className="modal-sent-sub">Si è aperto il tuo client email con il messaggio pronto. A presto!</p>
+                <p className="modal-sent-sub">Si è aperto Gmail con il messaggio pronto. A presto!</p>
                 <button className="modal-send-btn" onClick={closeModal}>Chiudi</button>
               </div>
             ) : (
@@ -219,56 +292,21 @@ export default function App() {
                 <div className="modal-row">
                   <div className="modal-field">
                     <label className="modal-label">Nome</label>
-                    <input
-                      className="modal-input"
-                      type="text"
-                      name="nome"
-                      placeholder="Mario"
-                      value={form.nome}
-                      onChange={handleChange}
-                      required
-                    />
+                    <input className="modal-input" type="text" name="nome" placeholder="Mario" value={form.nome} onChange={handleChange} required />
                   </div>
                   <div className="modal-field">
                     <label className="modal-label">Cognome</label>
-                    <input
-                      className="modal-input"
-                      type="text"
-                      name="cognome"
-                      placeholder="Rossi"
-                      value={form.cognome}
-                      onChange={handleChange}
-                      required
-                    />
+                    <input className="modal-input" type="text" name="cognome" placeholder="Rossi" value={form.cognome} onChange={handleChange} required />
                   </div>
                 </div>
-
                 <div className="modal-field">
                   <label className="modal-label">Email</label>
-                  <input
-                    className="modal-input"
-                    type="email"
-                    name="email"
-                    placeholder="mario@email.com"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input className="modal-input" type="email" name="email" placeholder="mario@email.com" value={form.email} onChange={handleChange} required />
                 </div>
-
                 <div className="modal-field">
                   <label className="modal-label">Messaggio</label>
-                  <textarea
-                    className="modal-textarea"
-                    name="messaggio"
-                    placeholder="Raccontami del tuo progetto..."
-                    rows={4}
-                    value={form.messaggio}
-                    onChange={handleChange}
-                    required
-                  />
+                  <textarea className="modal-textarea" name="messaggio" placeholder="Raccontami del tuo progetto..." rows={4} value={form.messaggio} onChange={handleChange} required />
                 </div>
-
                 <button className="modal-send-btn" type="submit">
                   <span>Invia messaggio</span>
                   <span className="modal-send-arr">↗</span>
@@ -284,7 +322,8 @@ export default function App() {
         items={[
           { label: 'Home', ariaLabel: 'Vai alla home', link: '/' },
           { label: 'Progetti', ariaLabel: 'I miei progetti', link: '#projects' },
-          { label: 'Contatti', ariaLabel: 'Contattami', link: 'mailto:mirkoprisciano@gmail.com' },
+          // Link speciale: cambiare hash triggera il choice overlay
+          { label: 'Contatti', ariaLabel: 'Contattami', link: '#contatti-scelta' },
         ]}
         socialItems={[
           { label: 'GitHub', link: 'https://github.com/mirko77-web' },
