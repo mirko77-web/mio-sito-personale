@@ -141,6 +141,7 @@ export default function App() {
                 <span key={s} className="skill-tag">{s}</span>
               ))}
             </div>
+            
 
             <div className="cta-row">
               <button className="btn-outline" onClick={openModal}>
@@ -339,5 +340,6 @@ export default function App() {
         accentColor="#3ecf8e"
       />
     </div>
+    
   );
 }
